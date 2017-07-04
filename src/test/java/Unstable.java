@@ -6,6 +6,7 @@ import java.lang.annotation.Target;
 @Target( {
         java.lang.annotation.ElementType.METHOD
 } )
-public @interface Repeat {
-    public abstract int times();
+public @interface Unstable
+{
+    public abstract int repetitions();
 }

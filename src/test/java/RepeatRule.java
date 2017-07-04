@@ -10,18 +10,28 @@ public class RepeatRule implements TestRule
 
     private static class RepeatStatement extends Statement {
 
-        private final int times;
+        private final int reps;
         private final Statement statement;
 
-        private RepeatStatement( int times, Statement statement ) {
-            this.times = times;
+        private RepeatStatement(int reps, Statement statement ) {
+            this.reps = reps;
             this.statement = statement;
         }
 
         @Override
         public void evaluate() throws Throwable {
-            for( int i = 0; i < times; i++ ) {
-                statement.evaluate();
+            for(int i = 0; i < reps; i++ ) {
+               try{
+                   statement.evaluate();
+                   System.out.println("worked from attempt number " + (i+1));
+                   break;
+               }
+               catch (Throwable t){
+                   System.out.println((i+1) +" try failed");
+                   if(i==reps-1){
+                       statement.evaluate();
+                   }
+               }
             }
         }
     }
@@ -29,10 +39,10 @@ public class RepeatRule implements TestRule
 
     public Statement apply(Statement statement, Description description ) {
         Statement result = statement;
-        Repeat repeat = description.getAnnotation( Repeat.class );
-        if( repeat != null ) {
-            int times = repeat.times();
-            result = new RepeatStatement( times, statement );
+        Unstable unstable = description.getAnnotation( Unstable.class );
+        if( unstable != null ) {
+            int n = unstable.repetitions();
+            result = new RepeatStatement( n, statement );
         }
         return result;
     }
