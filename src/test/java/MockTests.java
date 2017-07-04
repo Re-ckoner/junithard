@@ -10,12 +10,16 @@ public class MockTests {
     int i=0;
 
     @Rule
-    public UnstableRule rule = new UnstableRule();
+    public RepeatRule watcher = new RepeatRule();
+
+
 
     @Test
+    @Repeat(times=10)
         public void mockTest1(){
-        Assert.assertEquals(++i,2);
-        System.out.print("test");
+        Assert.assertEquals(2,2);
+        i++;
+        System.out.println(i);
     }
 
 
